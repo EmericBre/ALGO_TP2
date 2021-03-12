@@ -92,10 +92,10 @@ Arbre234 lire_arbre (char *nom_fichier)
     {
       ajouter_cle (&a, cle, 0, NULL) ;
 
-      /* 
+      
 	 printf ("================== affiichage arbre avec la cle %d ==================\n", cle) ;
 	 afficher_arbre (a, 0) ;
-      */
+      
       
     }
   

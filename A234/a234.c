@@ -266,35 +266,94 @@ int estFeuille(Arbre234 a) {
     return 1;
   }
   else {
-    if (a->t == 2) {
-      if (a->fils[1]->t == 0 && a->fils[2]->t == 0) {
-        return 1;
-      }
-      else {
-        return 0;
-      }
-    }
-    else if (a->t == 3) {
-      if (a->fils[0]->t == 0 && a->fils[1]->t == 0 && a->fils[2]->t == 0) {
-        return 1;
-      }
-      else {
-        return 0;
-      }
+    if (a->fils[1]->t == 0 && a->fils[2]->t == 0) {
+      return 1;
     }
     else {
-      if (a->fils[0]->t == 0 && a->fils[1]->t == 0 && a->fils[2]->t == 0 && a->fils[3]->t == 0) {
-        return 1;
-      }
-      else {
-        return 0;
-      }
+      return 0;
     }
   }
 }
 
+int dejaTraite(Arbre234 a, Arbre234* traites, int length) {
+  if (estFeuille(a) == 1) {
+    return -2;
+  }
+  for (int i = 0; i < length; i++) {
+    if (a==traites[i]) {
+      return i;
+    }
+  }
+  return -1;
+}
+
 void Affichage_Cles_Triees_NonRecursive (Arbre234 a)
 {
+  Arbre234* clestraitees = malloc(sizeof(Arbre234)*4);
+  int* apparitions = malloc(sizeof(int)*4);
+  ppile_t pile = creer_pile();
+  empiler(pile, a);
+  Arbre234 current;
+  int i = 0;
+  int result;
+
+  while (pile_vide(pile) != 1) {
+    current = depiler(pile);
+    result = dejaTraite(current, clestraitees, 4);
+    if (result == -1) {
+      if (current->t == 2) {
+        empiler(pile, current->fils[2]);
+        empiler(pile, current);
+        empiler(pile, current->fils[1]);
+      }
+      else {
+        if (current->t == 4) {
+          empiler(pile, current->fils[3]);
+        }
+        empiler(pile, current->fils[2]);
+        empiler(pile, current->fils[1]);
+        empiler(pile, current);
+        empiler(pile, current->fils[0]);
+      }
+      clestraitees[i] = current;
+      apparitions[i] = 1;
+      i++;
+    } 
+    else if (result != -2) {
+      if (current->t == 2) {
+        printf("%d ", current->cles[1]);
+      }
+      else if (current->t == 3) {
+        printf("%d ", current->cles[apparitions[result]-1]);
+        Arbre234 save = depiler(pile);
+        if (apparitions[result] != 2) {
+          empiler(pile, current);
+        }
+        empiler(pile, save);
+        apparitions[result]++;
+      }
+      else {
+        printf("%d ", current->cles[apparitions[result]-1]);
+        Arbre234 save = depiler(pile);
+        if (apparitions[result] != 3) {
+          empiler(pile, current);
+        }
+        empiler(pile, save);
+        apparitions[result]++;
+      }
+    }
+    else {
+      if (current->t == 2) {
+        printf("%d ", current->cles[1]);
+      }
+      else if (current->t == 3) {
+        printf("%d %d ", current->cles[0], current->cles[1]);
+      }
+      else {
+        printf("%d %d %d ", current->cles[0], current->cles[1], current->cles[2]);
+      }
+    }
+  }
 }
 
 
@@ -326,19 +385,19 @@ int main (int argc, char **argv)
   
   afficher_arbre (a, 0) ;
 
-  printf ("==== Nombre Clés arbre ====\n") ;
+  printf ("\n==== Nombre Clés arbre ====\n") ;
   
   printf("Nombre de clés de l'arbre : %d\n", NombreCles (a)) ;
 
-  printf ("==== Clé Max arbre ====\n") ;
+  printf ("\n==== Clé Max arbre ====\n") ;
   
   printf("Clé max de l'arbre : %d\n", CleMax (a)) ;
 
-  printf ("==== Clé Min arbre ====\n") ;
+  printf ("\n==== Clé Min arbre ====\n") ;
   
   printf("Clé min de l'arbre : %d\n", CleMin (a)) ;
 
-  printf ("==== Rechercher Clé arbre ====\n") ;
+  printf ("\n==== Rechercher Clé arbre ====\n") ;
   
   printf("Rechercher la clé 50 dans l'arbre : \n"); 
   afficher_arbre (RechercherCle(a, 50), 0) ;
@@ -353,7 +412,7 @@ int main (int argc, char **argv)
   printf("\nRechercher la clé 9 dans l'arbre : \n"); 
   afficher_arbre (RechercherCle(a, 9), 0) ;
 
-  printf ("==== Analyse Structure arbre ====\n") ;
+  printf ("\n==== Analyse Structure arbre ====\n") ;
 
   int feuilles = 0;
   int noeud2 = 0;
@@ -362,21 +421,26 @@ int main (int argc, char **argv)
 
   AnalyseStructureArbre(a, &feuilles, &noeud2, &noeud3, &noeud4);
   
-  printf("Analyse de la structure de l'arbre : %d, %d, %d, %d\n", feuilles, noeud2, noeud3, noeud4);
+  printf("Analyse de la structure de l'arbre : %d feuilles, %d 2-noeud, %d 3-noeud, %d 4-noeud\n", feuilles, noeud2, noeud3, noeud4);
 
-  printf ("==== Max noeud arbre ====\n") ;
+  printf ("\n==== Max noeud arbre ====\n") ;
   
   printf("Noeud maximum de l'arbre : \n");
   afficher_arbre (noeud_max(a), 0) ;
 
-  printf ("==== Liste clé largeur arbre ====\n") ;
+  printf ("\n==== Liste clé largeur arbre ====\n") ;
   
   printf("Parcours en largeur de l'arbre : \n");
   Afficher_Cles_Largeur (a) ; printf("\n");
 
-  printf ("==== Liste clé triée récursive arbre ====\n") ;
+  printf ("\n==== Liste clé triée récursive arbre ====\n") ;
   
   printf("Liste des clés triées récursivement de l'arbre : \n");
   Affichage_Cles_Triees_Recursive (a) ; printf("\n");
+
+  printf ("\n==== Liste clé triée non-récursive arbre ====\n") ;
+  
+  printf("Liste des clés triées non-récursivement de l'arbre : \n");
+  Affichage_Cles_Triees_NonRecursive (a) ; printf("\n");
 
 }
