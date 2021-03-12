@@ -3,6 +3,8 @@
 #include <string.h>
 
 #include "a234.h"
+#include "pile.h"
+#include "file.h"
 
 #define max(a,b) ((a)>(b)?(a):(b))
 
@@ -201,31 +203,98 @@ Arbre234 noeud_max (Arbre234 a)
 
 void Afficher_Cles_Largeur (Arbre234 a)
 {
-  /*
-    Afficher le cles de l'arbre a avec
-    un parcours en largeur
-  */
+  pfile_t file = creer_file();
+  enfiler(file, a);
+  Arbre234 current;
+  while(file_vide(file) != 1) {
+    current = defiler(file);
+    if (current->t != 0) {
+      if (current->t == 3 || current->t == 4) {
+        enfiler(file, current->fils[0]);
+      }
+      enfiler(file, current->fils[1]);
+      enfiler(file, current->fils[2]);
+      if (current->t == 4) {
+        enfiler(file, current->fils[3]);
+      }
+      
+      if (current->t == 2) {
+        printf("%d ", current->cles[1]);
+      }
+      else if (current->t == 3) {
+        printf("%d %d ", current->cles[0], current->cles[1]);
+      }
+      else {
+        printf("%d %d %d ", current->cles[0], current->cles[1], current->cles[2]);
+      }
+    }
+  }
 
   return ;
 }
 
 void Affichage_Cles_Triees_Recursive (Arbre234 a)
 {
-  /* 
-     Afficher les cles en ordre croissant
-     Cette fonction sera recursive
-  */
+  if (a!=NULL) {
+    if (a->t == 2) {
+      Affichage_Cles_Triees_Recursive(a->fils[1]);
+      printf("%d ", a->cles[1]);
+      Affichage_Cles_Triees_Recursive(a->fils[2]);
+    }
+    if (a->t == 3) {
+      Affichage_Cles_Triees_Recursive(a->fils[0]);
+      printf("%d ", a->cles[0]);
+      Affichage_Cles_Triees_Recursive(a->fils[1]);
+      printf("%d ", a->cles[1]);
+      Affichage_Cles_Triees_Recursive(a->fils[2]);
+    }
+    if (a->t == 4) {
+      Affichage_Cles_Triees_Recursive(a->fils[0]);
+      printf("%d ", a->cles[0]);
+      Affichage_Cles_Triees_Recursive(a->fils[1]);
+      printf("%d ", a->cles[1]);
+      Affichage_Cles_Triees_Recursive(a->fils[2]);
+      printf("%d ", a->cles[2]);
+      Affichage_Cles_Triees_Recursive(a->fils[3]);
+    }
+  }
      
+}
+
+int estFeuille(Arbre234 a) {
+  if (a == NULL) {
+    return 1;
+  }
+  else {
+    if (a->t == 2) {
+      if (a->fils[1]->t == 0 && a->fils[2]->t == 0) {
+        return 1;
+      }
+      else {
+        return 0;
+      }
+    }
+    else if (a->t == 3) {
+      if (a->fils[0]->t == 0 && a->fils[1]->t == 0 && a->fils[2]->t == 0) {
+        return 1;
+      }
+      else {
+        return 0;
+      }
+    }
+    else {
+      if (a->fils[0]->t == 0 && a->fils[1]->t == 0 && a->fils[2]->t == 0 && a->fils[3]->t == 0) {
+        return 1;
+      }
+      else {
+        return 0;
+      }
+    }
+  }
 }
 
 void Affichage_Cles_Triees_NonRecursive (Arbre234 a)
 {
-    /* 
-     Afficher les cles en ordre croissant
-     Cette fonction ne sera pas recursive
-     Utiliser une pile
-  */
-
 }
 
 
@@ -299,5 +368,15 @@ int main (int argc, char **argv)
   
   printf("Noeud maximum de l'arbre : \n");
   afficher_arbre (noeud_max(a), 0) ;
+
+  printf ("==== Liste clé largeur arbre ====\n") ;
+  
+  printf("Parcours en largeur de l'arbre : \n");
+  Afficher_Cles_Largeur (a) ; printf("\n");
+
+  printf ("==== Liste clé triée récursive arbre ====\n") ;
+  
+  printf("Liste des clés triées récursivement de l'arbre : \n");
+  Affichage_Cles_Triees_Recursive (a) ; printf("\n");
 
 }
