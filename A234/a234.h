@@ -21,4 +21,30 @@ void afficher_arbre (Arbre234 a, int niveau) ;
 
 void ajouter_cle (Arbre234 *a, int cle, int niveau, Arbre234 pere) ;
 
-  
+int hauteur (Arbre234 a);
+
+int NombreCles (Arbre234 a);
+
+int CleMax (Arbre234 a);
+
+int CleMin (Arbre234 a);
+
+Arbre234 RechercherCle (Arbre234 a, int cle);
+
+void AnalyseStructureArbre (Arbre234 a, int *feuilles, int *noeud2, int *noeud3, int *noeud4);
+
+int sommeNoeud(Arbre234 a);
+
+Arbre234 noeud_max (Arbre234 a);
+
+void Afficher_Cles_Largeur (Arbre234 a);
+
+void Affichage_Cles_Triees_Recursive (Arbre234 a);
+
+int estFeuille(Arbre234 a);
+
+int dejaTraite(Arbre234 a, Arbre234* traites, int length);
+
+void Affichage_Cles_Triees_NonRecursive (Arbre234 a);
+
+void Detruire_Cle (Arbre234 *a, int cle);

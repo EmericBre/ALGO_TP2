@@ -359,9 +359,14 @@ void Affichage_Cles_Triees_NonRecursive (Arbre234 a)
 
 void Detruire_Cle (Arbre234 *a, int cle)
 {
-  /*
-    retirer la cle de l'arbre a
-  */
+  Arbre234 tmp = *a;
+
+  if (tmp!= NULL) {
+    Detruire_Cle_Rec(cle, a);
+    // if (tmp->t == 0) {
+    //   tmp = tmp->fils[0];
+    // }
+  }
 
   return ;
 }
@@ -442,5 +447,32 @@ int main (int argc, char **argv)
   
   printf("Liste des clés triées non-récursivement de l'arbre : \n");
   Affichage_Cles_Triees_NonRecursive (a) ; printf("\n");
+
+  printf ("\n==== Détruire Clé arbre ====\n") ;
+  
+  printf("Détruire la clé 1 dans l'arbre : \n"); 
+  Detruire_Cle(&a, 1);
+  afficher_arbre (a, 0) ;
+  printf("Détruire la clé 7 dans l'arbre : \n"); 
+  Detruire_Cle(&a, 7);
+  afficher_arbre (a, 0) ;
+  printf("Détruire la clé 8 dans l'arbre : \n"); 
+  Detruire_Cle(&a, 8);
+  afficher_arbre (a, 0) ;
+  // printf("\nDétruire la clé 12 dans l'arbre : \n\n"); 
+  // Detruire_Cle(&a, 12);
+  // afficher_arbre (a, 0) ;
+  // printf("\nDétruire la clé 15 dans l'arbre : \n"); 
+  // Detruire_Cle(&a, 15);
+  // afficher_arbre (a, 0) ;
+  // printf("\nDétruire la clé 11 dans l'arbre : \n\n"); 
+  // Detruire_Cle(&a, 11);
+  // afficher_arbre (a, 0) ;
+  // printf("\nDétruire la clé 3 dans l'arbre : \n"); 
+  // Detruire_Cle(&a, 3);
+  // afficher_arbre (a, 0) ;
+  // printf("\nDétruire la clé 9 dans l'arbre : \n"); 
+  // Detruire_Cle(&a, 9);
+  // afficher_arbre (a, 0) ;
 
 }
