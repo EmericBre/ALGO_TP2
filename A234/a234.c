@@ -5,6 +5,7 @@
 #include "a234.h"
 #include "pile.h"
 #include "file.h"
+#include "detruire_cle.h"
 
 #define max(a,b) ((a)>(b)?(a):(b))
 
@@ -359,13 +360,11 @@ void Affichage_Cles_Triees_NonRecursive (Arbre234 a)
 
 void Detruire_Cle (Arbre234 *a, int cle)
 {
-  Arbre234 tmp = *a;
-
-  if (tmp!= NULL) {
+  Arbre234 A = *a;
+  if (A!= NULL) {
     Detruire_Cle_Rec(cle, a);
-    // if (tmp->t == 0) {
-    //   tmp = tmp->fils[0];
-    // }
+    printf("\n");
+    verifFusion(a);
   }
 
   return ;
@@ -450,29 +449,52 @@ int main (int argc, char **argv)
 
   printf ("\n==== Détruire Clé arbre ====\n") ;
   
+  printf("Détruire la clé 12 dans l'arbre : \n"); 
+  Detruire_Cle(&a, 12);
+  afficher_arbre (a, 0) ;
+  printf("Détruire la clé 13 dans l'arbre : \n"); 
+  Detruire_Cle(&a, 13);
+  afficher_arbre (a, 0) ;
+  printf("Détruire la clé 15 dans l'arbre : \n"); 
+  Detruire_Cle(&a, 15);
+  afficher_arbre (a, 0) ;
+  printf("Détruire la clé 4 dans l'arbre : \n"); 
+  Detruire_Cle(&a, 4);
+  afficher_arbre (a, 0) ;
   printf("Détruire la clé 1 dans l'arbre : \n"); 
   Detruire_Cle(&a, 1);
-  afficher_arbre (a, 0) ;
-  printf("Détruire la clé 7 dans l'arbre : \n"); 
-  Detruire_Cle(&a, 7);
   afficher_arbre (a, 0) ;
   printf("Détruire la clé 8 dans l'arbre : \n"); 
   Detruire_Cle(&a, 8);
   afficher_arbre (a, 0) ;
-  // printf("\nDétruire la clé 12 dans l'arbre : \n\n"); 
-  // Detruire_Cle(&a, 12);
-  // afficher_arbre (a, 0) ;
-  // printf("\nDétruire la clé 15 dans l'arbre : \n"); 
-  // Detruire_Cle(&a, 15);
-  // afficher_arbre (a, 0) ;
-  // printf("\nDétruire la clé 11 dans l'arbre : \n\n"); 
-  // Detruire_Cle(&a, 11);
-  // afficher_arbre (a, 0) ;
-  // printf("\nDétruire la clé 3 dans l'arbre : \n"); 
-  // Detruire_Cle(&a, 3);
-  // afficher_arbre (a, 0) ;
-  // printf("\nDétruire la clé 9 dans l'arbre : \n"); 
-  // Detruire_Cle(&a, 9);
-  // afficher_arbre (a, 0) ;
-
+  printf("Détruire la clé 35 dans l'arbre : \n"); 
+  Detruire_Cle(&a, 35);
+  afficher_arbre (a, 0) ;
+  printf("Détruire la clé 7 dans l'arbre : \n"); 
+  Detruire_Cle(&a, 7);
+  afficher_arbre (a, 0) ;
+  printf("Détruire la clé 14 dans l'arbre : \n"); 
+  Detruire_Cle(&a, 14);
+  afficher_arbre (a, 0) ;
+  printf("Détruire la clé 28 dans l'arbre : \n"); 
+  Detruire_Cle(&a, 28);
+  afficher_arbre (a, 0) ;
+  printf("Détruire la clé 10 dans l'arbre : \n"); 
+  Detruire_Cle(&a, 10);
+  afficher_arbre (a, 0) ;
+  printf("Détruire la clé 11 dans l'arbre : \n"); 
+  Detruire_Cle(&a, 11);
+  afficher_arbre (a, 0) ;
+  printf("Détruire la clé 3 dans l'arbre : \n"); 
+  Detruire_Cle(&a, 3);
+  afficher_arbre (a, 0) ;
+  printf("Détruire la clé 40 dans l'arbre : \n"); 
+  Detruire_Cle(&a, 40);
+  afficher_arbre (a, 0) ;
+  printf("Détruire la clé 50 dans l'arbre : \n"); 
+  Detruire_Cle(&a, 50);
+  afficher_arbre (a, 0) ;
+  printf("Détruire la clé 20 dans l'arbre : \n"); 
+  Detruire_Cle(&a, 20);
+  afficher_arbre (a, 0) ;
 }
