@@ -37,30 +37,37 @@ void fusion(Arbre234 *a, int indice) {
         G->t = 4;
         free(D);
         if (A->t == 3) {
-            if (indice == 1) {
+            if (indice == 0) {
+                A->fils[1] = A->fils[0];
+                A->fils[1]->t = A->fils[0]->t;
+            }
+            else if (indice == 1) {
                 A->cles[1] = A->cles[0];
+                A->fils[2] = A->fils[1];
+                A->fils[2]->t = A->fils[1]->t;
+                A->fils[1] = A->fils[0];
+                A->fils[1]->t = A->fils[0]->t;
             }
-            else if (indice == A->t-2) {
-                A->cles[indice] = 0;
-            }
+            A->fils[0] = NULL;
+            A->cles[0] = 0;
             A->t--;
-            A->fils[indice+1] = A->fils[indice];
         }
         else if (A->t == 4) {
             if (indice == 1) {
                 A->cles[1] = A->cles[2];
-            }
-            else if (indice == A->t-2) {
-                A->cles[indice] = 0;
+                A->fils[2] = A->fils[3];
+                A->fils[2]->t = A->fils[3]->t;
             }
             else if (indice == 0) {
+                A->fils[1] = A->fils[2];
+                A->fils[1]->t = A->fils[2]->t;
+                A->fils[2] = A->fils[3];
+                A->fils[2]->t = A->fils[3]->t;
                 A->cles[0] = A->cles[1];
                 A->cles[1] = A->cles[2];
-                printf("\n");
-                A->fils[1] = A->fils[2];
-                A->fils[2] = A->fils[3];
             }
-            printf("\n");
+            A->cles[2] = 0;
+            A->fils[3] = NULL;
             A->t--;
         }
     }
@@ -110,41 +117,45 @@ void rd_gen(Arbre234 *a, int indice) {
 }
 
 void rg_gen(Arbre234 *a, int indice) {
-    int j;
     Arbre234 G;
     Arbre234 D;
     Arbre234 A = *a;
 
     G = A->fils[indice];
     D = A->fils[indice+1];
-    G->cles[G->t+1] = A->cles[indice];
     G->t = G->t+1;
     if (G->t == 3) {
         G->cles[0] = G->cles[1];
         G->cles[1] = A->cles[indice];
         G->fils[0] = G->fils[1];
         G->fils[1] = G->fils[2];
-        G->fils[2] = D->fils[indice];
+        G->fils[2] = D->fils[0];
     }
     else {
         G->cles[2] = A->cles[indice];
-        G->fils[3] = D->fils[indice];
+        G->fils[3] = D->fils[0];
     }
-    A->cles[indice] = D->cles[indice];
+    A->cles[indice] = D->cles[0];
 
-    for (j = 1; j < D->t; j++) {
-        D->cles[j] = D->cles[j+1];
-    }
-    if (D->fils[0] != NULL) {
-        for (j = 1; j < D->t-1; j++) {
-            D->fils[j] = D->fils[j+1];
-        }
-    }
     D->t = D->t-1;
+
+    if (D->t == 2) {
+        D->cles[0] = 0;
+        D->fils[0] = NULL;
+    }
+    else {
+        D->cles[0] = D->cles[1];
+        D->cles[1] = D->cles[2];
+        D->fils[0] = D->fils[1];
+        D->fils[0]->t = D->fils[1]->t;
+        D->fils[1] = D->fils[2];
+        D->fils[1]->t = D->fils[2]->t;
+        D->fils[2] = D->fils[3];
+        D->fils[2]->t = D->fils[3]->t;
+    }
 }
 
 void Detruire_Cle_Rec(int cle, Arbre234 *A) {
-    printf("\t");
     Arbre234 a = *A;
     int indice = 0;
 
@@ -164,7 +175,7 @@ void Detruire_Cle_Rec(int cle, Arbre234 *A) {
         }
     }
 
-    if (a->fils[1] != NULL && a->fils[1]->t != 0) { // Noeud interne
+    if (estFeuille(a)==0) { // Noeud interne
         if (a->cles[indice] == cle) { // On a trouvé la clé
             if (a->fils[indice]->t > a->fils[indice+1]->t) { // fils gauche plus petit que fils droit
                 a->cles[indice] = CleMax(a->fils[indice]); // On récupère la clé max du fils gauche et on la supprime de ce fils
@@ -191,7 +202,7 @@ void Detruire_Cle_Rec(int cle, Arbre234 *A) {
                         rg_gen(A, indice); // On fait une rotation gauche
                     }
                     else { // Les deux fils n'ont qu'une clé, on les fusionne
-                        if (indice > 0) {
+                        if (indice > 0 && a->t > 2) {
                             indice--;
                         }
                         fusion(A, indice);
@@ -218,6 +229,9 @@ void Detruire_Cle_Rec(int cle, Arbre234 *A) {
                 a->cles[0] = a->cles[1];
                 a->cles[1] = a->cles[2];
             }
+        }
+        else if (a->t == 2) {
+            a->t = 1;
         }
         a->t--;
         return;

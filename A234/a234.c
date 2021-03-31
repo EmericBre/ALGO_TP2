@@ -43,7 +43,7 @@ int NombreCles (Arbre234 a)
 int CleMax (Arbre234 a)
 {
   if (a==NULL) {
-    return 0;
+    return -1;
   }
   if (a->t == 0) {
     return -1;
@@ -60,7 +60,7 @@ int CleMin (Arbre234 a)
 {
   int verif;
   if (a==NULL) {
-    return 0;
+    return -1;
   }
   if (a->t == 0) {
     return -1;
@@ -288,10 +288,20 @@ int dejaTraite(Arbre234 a, Arbre234* traites, int length) {
   return -1;
 }
 
+int nbNoeudsInternes(Arbre234 a) {
+  if (a==NULL || a->t == 0 || estFeuille(a)) {
+    return 0;
+  }
+  else {
+    return 1 + nbNoeudsInternes(a->fils[0]) + nbNoeudsInternes(a->fils[1]) + nbNoeudsInternes(a->fils[2]) + nbNoeudsInternes(a->fils[3]);
+  }
+}
+
 void Affichage_Cles_Triees_NonRecursive (Arbre234 a)
 {
-  Arbre234* clestraitees = malloc(sizeof(Arbre234)*4);
-  int* apparitions = malloc(sizeof(int)*4);
+  int nbnoeudsinternes = nbNoeudsInternes(a);
+  Arbre234* clestraitees = malloc(sizeof(Arbre234)*nbnoeudsinternes);
+  int* apparitions = malloc(sizeof(int)*nbnoeudsinternes);
   ppile_t pile = creer_pile();
   empiler(pile, a);
   Arbre234 current;
@@ -300,7 +310,7 @@ void Affichage_Cles_Triees_NonRecursive (Arbre234 a)
 
   while (pile_vide(pile) != 1) {
     current = depiler(pile);
-    result = dejaTraite(current, clestraitees, 4);
+    result = dejaTraite(current, clestraitees, nbnoeudsinternes);
     if (result == -1) {
       if (current->t == 2) {
         empiler(pile, current->fils[2]);
@@ -361,10 +371,16 @@ void Affichage_Cles_Triees_NonRecursive (Arbre234 a)
 void Detruire_Cle (Arbre234 *a, int cle)
 {
   Arbre234 A = *a;
-  if (A!= NULL) {
+  if (A!= NULL && A->t > 0) {
+    if (RechercherCle(A, cle) == NULL) {
+      return;
+    }
     Detruire_Cle_Rec(cle, a);
-    printf("\n");
     verifFusion(a);
+  }
+  else {
+    printf("L'arbre donné est NULL, il n'y a aucun noeud.\n");
+    return;
   }
 
   return ;
@@ -448,6 +464,8 @@ int main (int argc, char **argv)
   Affichage_Cles_Triees_NonRecursive (a) ; printf("\n");
 
   printf ("\n==== Détruire Clé arbre ====\n") ;
+
+  afficher_arbre(a, 0);
   
   printf("Détruire la clé 12 dans l'arbre : \n"); 
   Detruire_Cle(&a, 12);
@@ -488,6 +506,9 @@ int main (int argc, char **argv)
   printf("Détruire la clé 3 dans l'arbre : \n"); 
   Detruire_Cle(&a, 3);
   afficher_arbre (a, 0) ;
+  printf("Détruire la clé 35 dans l'arbre : \n"); 
+  Detruire_Cle(&a, 35);
+  afficher_arbre (a, 0) ;
   printf("Détruire la clé 40 dans l'arbre : \n"); 
   Detruire_Cle(&a, 40);
   afficher_arbre (a, 0) ;
@@ -496,5 +517,11 @@ int main (int argc, char **argv)
   afficher_arbre (a, 0) ;
   printf("Détruire la clé 20 dans l'arbre : \n"); 
   Detruire_Cle(&a, 20);
+  afficher_arbre (a, 0) ;
+  printf("Détruire la clé 30 dans l'arbre : \n"); 
+  Detruire_Cle(&a, 30);
+  afficher_arbre (a, 0) ;
+  printf("Détruire la clé 35 dans l'arbre : \n"); 
+  Detruire_Cle(&a, 35);
   afficher_arbre (a, 0) ;
 }
